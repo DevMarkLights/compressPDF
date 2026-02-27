@@ -22,4 +22,4 @@ def compress_pdf(input_path, output_path, quality="screen"):
     subprocess.run(command, check=True)
 
 # compress_pdf("input.pdf", "compressed.pdf", quality="ebook")
-compress_pdf("Exam 2 notes copy.pdf", "Exam 2 notes copy_compressed.pdf", quality="ebook")
+# compress_pdf("Exam 2 notes copy.pdf", "Exam 2 notes copy_compressed.pdf", quality="ebook")
