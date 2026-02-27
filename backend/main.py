@@ -1,6 +1,9 @@
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
+from fastapi import BackgroundTasks
+from fastapi.staticfiles import StaticFiles
 from compressGhostScript import compress_pdf
 import uvicorn
 import os
@@ -14,6 +17,24 @@ QUALITY_MAP = ['screen','ebook','printer','prepress']
 print("Running from:", os.getcwd())
 BASE_DIR = os.getcwd()
 # BASE_DIR = Path(__file__).resolve().parent
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"
+        # "http://localhost:5173",  # Vite default
+        # "http://localhost:3000",  # CRA default (optional)
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=[
+        "Content-Disposition",
+        "X-File-Size-MB",
+        "X-File-Size-Compressed-MB",
+        "X-Compression-Status",
+    ],
+)
+
 
 @app.post("/compress", response_class=FileResponse)
 def compress( file: UploadFile = File(...), quality: str = Form("screen")):
@@ -49,11 +70,20 @@ def compress( file: UploadFile = File(...), quality: str = Form("screen")):
         headers={
             "X-File-Size-MB": f"{file_size_mb:.4f} mb",
             "X-File-Size-Compressed-MB": f"{compressed_file_size_mb:.4f} mb",
-            "X-Compression-Status": "success"
+            "X-Compression-Status": "success",
+            "X-Filename": file.filename.replace('.pdf','_compressed.pdf')
         }
     )
+
+@app.get('/removeFiles')
+def removeFiles():
+    for item in Path(BASE_DIR+'/files/').iterdir(): #remove files from folder
+        if item.is_file():
+            item.unlink()
     
-        
+
+app.mount("/", StaticFiles(directory="dist", html=True), name="frontend")
+
 
 if __name__ == "__main__":
     uvicorn.run(
