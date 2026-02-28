@@ -65,7 +65,7 @@ function App() {
           <option value='printer'>High</option>
           <option value='prepress'>Very High</option>
         </select>
-        <p style={{color:'red'}}>ONLY ACCEPTS PDFs</p>
+        <p style={{color:'red'}}>ONLY ACCEPTS PDFs less than 50 Mbs</p>
         <p>File will be automatically downloaded</p>
         <div className='fileDropDiv'>
           <input
