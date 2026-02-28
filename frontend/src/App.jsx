@@ -66,7 +66,7 @@ function App() {
           <option value='prepress'>Very High</option>
         </select>
         <p style={{color:'red'}}>ONLY ACCEPTS PDFs less than 50 Mbs</p>
-        <p>File will be automatically downloaded</p>
+        <p>File will automatically be downloaded</p>
         <div className='fileDropDiv'>
           <input
               id='fileDrop'
